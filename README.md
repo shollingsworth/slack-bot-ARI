@@ -1,7 +1,7 @@
 # Installation
 @TODO
 
-# @TODO
+# TODO
 * add insult command to insult bot... duh!
 
 # Links
