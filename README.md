@@ -10,7 +10,7 @@
 
 * Online REST Testing urls
     * [Ngrok](https://ngrok.com/) - amazing tool for simple tunneling and testing your webapps running on your local machine
-        * I wouldn't leave this on FWIW - great dev tools though
+        * I wouldn't leave this on FWIW - great dev tool though
     * [requestbin](https://requestb.in)
     * [hurlit](https://www.hurl.it/)
 
