@@ -1,18 +1,18 @@
 # Installation
-
-# Production Todo
+@TODO
 
 # @TODO
-* build initial test / bot
+* add insult command to insult bot... duh!
 
 # Links
 * tutorials
-    * https://www.fullstackpython.com/blog/build-first-slack-bot-python.html
-    * https://realpython.com/blog/python/getting-started-with-the-slack-api-using-python-and-flask/
+    * This work is mostly based on: [github/slackapi](https://github.com/slackapi/Slack-Python-Onboarding-Tutorial)
 
 * Online REST Testing urls
-* https://requestb.in
-* https://www.hurl.it/
+    * [Ngrok](https://ngrok.com/) - amazing tool for simple tunneling and testing your webapps running on your local machine
+        * I wouldn't leave this on FWIW - great dev tools though
+    * [requestbin](https://requestb.in)
+    * [hurlit](https://www.hurl.it/)
 
-* install for testing
+* Manually Initiating an oAuth Request from the api.slack.com site
     * https://api.slack.com/docs/slack-button - add with slack install OK
