@@ -37,15 +37,15 @@ def get_slack_client(team_id):
     token = get_bot_token(team_id)
     if not token:
         raise Exception("Error, token is not set in file: {}".format(slack_bot_auth_file))
-    if team_id in slack_clients:
-        return slack_clients.get(team_id)
-    else:
+    if team_id not in slack_clients:
         scli = SlackClient(token)
         res = scli.api_call('auth.test')
         if not res.get('ok'):
             raise Exception("Error authenticating: {}".format(res.get('error')))
         slack_clients[team_id] = scli
-        return slack_clients[team_id]
+        return scli
+    else:
+        return slack_clients.get(team_id)
 
 
 class Bot(object):

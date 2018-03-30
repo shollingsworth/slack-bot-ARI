@@ -8,16 +8,55 @@ import sys
 import botconfig
 import bot
 import event
+import commands
+import form
 from flask import Flask, request, make_response, render_template
 
 # obsfucate , not fantastic, but this might keep the skids out
 pyBot = bot.Bot()
 app = Flask(__name__)
 
+cmd_sento_function = {
+    '/yourmom': commands.insult.yourmom,
+    '/yourmom_add': commands.insult.add_yourmom,
+    '/insult': commands.insult.yourmom,
+}
+
+
+# Process form input
+@app.route("/form", methods=["POST"])
+def formprocess():
+    data = request.form.getlist('payload')
+    data = [json.loads(i) for i in data][0]
+    callback = data.get('callback_id')
+    try:
+        cb_func = getattr(form, callback)
+    except AttributeError:
+        return make_response("Whatchu talkin' about Willis?", 510)
+    except Exception as e:
+        return make_response("Fuck... I don't know what I'm doing here?", 511)
+        # debug log something or other @TODO
+        print("Exception: {}".format(e.message))
+    cb_func(data)
+    return make_response('', 200)
+
+
+@app.route("/cmd", methods=["POST"])
+def docmd():
+    data = request.form
+    if not data:
+        raise Exception("Error, data is empty in request")
+    # @TODO Moar validation
+    cmd = data.get('command')
+    if cmd not in cmd_sento_function.keys():
+        raise Exception("Error, {} not found in configuration")
+    cmd_sento_function[cmd](data)
+    return make_response('', 200)
+
 
 # This will be put under Redirect URLs under the oAuth section for you app
 # Example https://blarg.com/{callback_url} , https is required
-@app.route("/{}".format(botconfig.url_oauth), methods=["GET", "POST"])
+@app.route("/callback", methods=["GET", "POST"])
 def callback():
     # Let's grab that temporary authorization code Slack's sent us from
     # the request's parameters.
@@ -33,17 +72,6 @@ def callback():
     return render_template("thanks.html")
 
 
-@app.route("/{}".format(botconfig.url_command), methods=["POST"])
-def docmd():
-    data = request.form
-    if not data:
-        raise Exception("Error, data is empty in request")
-    if botconfig.DEBUG:
-        sys.stdout.write("COMMAND: {}\n".format(json.dumps(data, indent=5)))
-        sys.stdout.flush()
-    return make_response('OK', 200, {"X-Slack-No-Retry": 1})
-
-
 # This is pretty simple, pretty much a static html page based on class varibles
 @app.route("/install", methods=["GET"])
 def pre_install():
@@ -56,7 +84,7 @@ def pre_install():
     )
 
 
-@app.route("/{}".format(botconfig.url_event), methods=["GET", "POST"])
+@app.route("/event", methods=["GET", "POST"])
 def hears():
     """
     This route listens for incoming events from Slack and uses the event

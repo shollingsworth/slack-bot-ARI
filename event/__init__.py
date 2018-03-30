@@ -7,6 +7,30 @@ import bot
 from flask import make_response
 
 
+def process(event_data):
+    if botconfig.DEBUG:
+        sys.stdout.write("EVENT DATA: {}\n".format(
+            json.dumps(event_data, indent=5)
+        ))
+        sys.stdout.flush()
+
+    team_id = event_data.get('team_id')
+
+    if not team_id:
+        raise Exception("Error, could not extract 'team_id'")
+
+    event = event_data.get('event')
+    if not event:
+        raise Exception("Error, event data empty")
+
+    channel = event.get('channel')
+    if not channel:
+        raise Exception("Error, channel data invalid or empty")
+
+    yousaid(team_id, event)
+    return make_response('OK', 200)
+
+
 def yousaid(team_id, event):
     client = bot.get_slack_client(team_id)
     channel = event.get('channel')
@@ -33,31 +57,3 @@ def yousaid(team_id, event):
             json.dumps(post_message, indent=5)
         ))
     sys.stdout.flush()
-
-
-def process(event_data):
-    if botconfig.DEBUG:
-        sys.stdout.write("EVENT DATA: {}\n".format(
-            json.dumps(event_data, indent=5)
-        ))
-        sys.stdout.flush()
-
-    team_id = event_data.get('team_id')
-
-    if not team_id:
-        raise Exception("Error, could not extract 'team_id'")
-
-    event = event_data.get('event')
-    if not event:
-        raise Exception("Error, event data empty")
-
-    channel = event.get('channel')
-    if not channel:
-        raise Exception("Error, channel data invalid or empty")
-
-    yousaid(team_id, event)
-    return make_response('OK', 200)
-
-
-if __name__ == '__main__':
-    pass
