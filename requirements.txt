@@ -1,10 +1,10 @@
 click==6.6
-Flask==0.11.1
+Flask
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2
 MarkupSafe==0.23
-pyaml==16.9.0
-PyYAML==3.12
+pyaml
+PyYAML
 requests>=2.20.0
 six==1.10.0
 slackclient==1.0.2
